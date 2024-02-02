@@ -47,7 +47,7 @@ h1 {
 }
 
 .horizontal-selector-item:hover {
-  background-color: lightgreen;
+  background-color: rgb(202, 255, 202);
   transform:translateY(-0.3rem);
   transition: 300ms;
   border-bottom: 3px solid #d3d3d3ee;
@@ -55,7 +55,7 @@ h1 {
 }
 
 .vertical-selector-item:hover {
-  background-color: lightgreen;
+  background-color: rgb(202, 255, 202);
   transition: 300ms;
   border-radius: 1rem;
   transform: translateX(1rem);
