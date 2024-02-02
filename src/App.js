@@ -6,6 +6,7 @@ function App() {
   const category = Object.keys(data);
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const selectedData = data[category[selectedCategoryId]];
 
   function handleClickItem(id) {
     setSelectedItemId(id === selectedItemId ? null : id);
@@ -25,17 +26,17 @@ function App() {
             handleCategoryClick(id);
             setSelectedItemId(null);
           }}
-          data={Object.keys(data).map((ele, index) => {
+          data={category.map((ele, index) => {
             return { key: index, value: `(${index + 1}) ${ele}` };
           })}
           type="horizontal"
         />
       </div>
       <div className="table-container">
-        <h2>{`List (${data[category[selectedCategoryId]].length})`}</h2>
+        <h2>{`List (${selectedData.length})`}</h2>
         <div className="table-list">
           <Selector
-            data={data[category[selectedCategoryId]].map((el, index) => {
+            data={selectedData.map((el, index) => {
               return { key: index, value: el };
             })}
             type="vertical"
