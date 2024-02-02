@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./App.css";
 import data from "./data/data";
 import Selector from "./Selector";
 
