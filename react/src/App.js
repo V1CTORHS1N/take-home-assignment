@@ -12,11 +12,15 @@ function App() {
   const selectedData = data[category[selectedCategoryId]];
 
   function handleClickItem(id) {
+    // Multiple Selection
     if (selectedItemId.includes(id)) {
       setSelectedItemId((items) => items.filter((item) => item !== id));
     } else {
       setSelectedItemId((items) => [...items, id]);
     }
+
+    // Single Selection
+    // setSelectedItemId(id === selectedItemId ? null : id);
   }
 
   function handleCategoryClick(id) {
