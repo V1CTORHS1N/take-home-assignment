@@ -5,11 +5,18 @@ import Selector from "./Selector";
 function App() {
   const category = Object.keys(data);
   const [selectedCategoryId, setSelectedCategoryId] = useState(0);
-  const [selectedItemId, setSelectedItemId] = useState(null);
+  // Multiple Selection
+  const [selectedItemId, setSelectedItemId] = useState([]);
+  // Single Selection
+  // const [selectedItemId, setSelectedItemId] = useState(null);
   const selectedData = data[category[selectedCategoryId]];
 
   function handleClickItem(id) {
-    setSelectedItemId(id === selectedItemId ? null : id);
+    if (selectedItemId.includes(id)) {
+      setSelectedItemId((items) => items.filter((item) => item !== id));
+    } else {
+      setSelectedItemId((items) => [...items, id]);
+    }
   }
 
   function handleCategoryClick(id) {
@@ -24,7 +31,10 @@ function App() {
           selectedId={selectedCategoryId}
           handleClick={(id) => {
             handleCategoryClick(id);
-            setSelectedItemId(null);
+            // Multiple Selection
+            setSelectedItemId([]);
+            // Single Selection
+            // setSelectedItemId(null);
           }}
           data={category.map((ele, index) => {
             return { key: index, value: `(${index + 1}) ${ele}` };
