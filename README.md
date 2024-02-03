@@ -28,3 +28,9 @@
              ```bash
              npm start
              ```
+## Demo
+### Multiple Selection
+![Multiple Selection](images/multiple-selection.gif)
+
+### Single Selection
+![Single Selection](images/single-selection.gif)
