@@ -65,5 +65,4 @@ category.map((item, index) => {
   document.getElementById("category-container").appendChild(div);
 });
 
-document.querySelector(`.${activeCategory}`).classList.add("active");
 document.querySelector(`.${activeCategory}`).click();
