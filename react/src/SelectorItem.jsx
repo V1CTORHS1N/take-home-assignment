@@ -1,11 +1,19 @@
 import React from "react";
 
-const SelectorItem = ({ id, type, selectedId, onClick, children }) => {
-  // Multiple Selection
+const SelectorItem = ({
+  id,
+  type,
+  selectedItem,
+  onClick,
+  handleDelete,
+  children,
+}) => {
   if (type === "horizontal") {
     return (
       <div
-        className={`${type}-selector-item ${selectedId === id ? "active" : ""}`}
+        className={`${type}-selector-item ${
+          selectedItem === children.split(" ")[1] ? "active" : ""
+        }`}
         onClick={onClick}
       >
         {children}
@@ -17,26 +25,17 @@ const SelectorItem = ({ id, type, selectedId, onClick, children }) => {
     return (
       <div
         className={`${type}-selector-item ${
-          selectedId.includes(id) ? "active" : ""
+          selectedItem.includes(children) ? "active" : ""
         }`}
         onClick={onClick}
       >
         {children}
+        <button className="trash-button" onClick={(e) => handleDelete(e, id)}>
+          🗑️
+        </button>
       </div>
     );
   }
-
-  // Single Selection
-  /*
-  return (
-    <div
-      className={`${type}-selector-item ${selectedId === id ? "active" : ""}`}
-      onClick={onClick}
-    >
-      {children}
-    </div>
-  );
-  */
 };
 
 export default SelectorItem;
