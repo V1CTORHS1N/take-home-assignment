@@ -6,11 +6,11 @@ const Selector = ({ selectedItem, handleClick, data, type, handleDelete }) => {
       {data.length > 0 ? (
         data.map((ele) => (
           <SelectorItem
-            key={ele.value}
-            id={ele.value}
+            key={ele.id}
+            id={ele.id}
             selectedItem={selectedItem}
             type={type}
-            onClick={() => handleClick(ele.value)}
+            onClick={() => handleClick(ele.id)}
             handleDelete={handleDelete}
           >
             {ele.value}

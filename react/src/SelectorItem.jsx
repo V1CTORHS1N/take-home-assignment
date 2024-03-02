@@ -25,7 +25,7 @@ const SelectorItem = ({
     return (
       <div
         className={`${type}-selector-item ${
-          selectedItem.includes(children) ? "active" : ""
+          selectedItem.includes(id) ? "active" : ""
         }`}
         onClick={onClick}
       >

@@ -1,29 +1,39 @@
 import { useEffect, useState } from "react";
-import data from "./data/data";
 import Selector from "./Selector";
 import Pagination from "./Pagination";
+import { useGlobalContext } from "./useContext";
 
 const ITEM_PER_PAGE = 5;
 
 function App() {
-  const category = Object.keys(data);
+  const { data, postDataApi, getDataApi, deleteDataApi } = useGlobalContext();
+  const category = ["Fruits"];
   const [selectedCategory, setSelectedCategory] = useState(category[0]);
   const [inputValue, setInputValue] = useState("");
-  const [tableData, setTableData] = useState(data);
   const [currentPage, setCurrentPage] = useState(1);
+  const [dataLength, setDataLength] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const [displayedData, setDisplayedData] = useState([]);
 
   useEffect(() => {
-    setDisplayedData(
-      tableData[selectedCategory].slice(
-        (currentPage - 1) * ITEM_PER_PAGE,
-        currentPage * ITEM_PER_PAGE
-      )
-    );
-  }, [currentPage, tableData, selectedCategory]);
+    const _getTotalLength = async () => {
+      const res = await getDataApi(`/${selectedCategory.toLowerCase()}`);
+      setDataLength(res.length);
+    };
+    _getTotalLength();
+  }, [selectedCategory, getDataApi]);
 
-  function handleClickItem(id) {
+  useEffect(() => {
+    const _getData = async () => {
+      const response = await getDataApi(
+        `/${selectedCategory.toLowerCase()}?limit=${ITEM_PER_PAGE}&page=${currentPage}`
+      );
+      setDisplayedData(response);
+    };
+    _getData();
+  }, [currentPage, data, selectedCategory, getDataApi, dataLength]);
+
+  async function handleClickItem(id) {
     if (selectedItems.includes(id)) {
       setSelectedItems((items) => items.filter((item) => item !== id));
     } else {
@@ -35,36 +45,31 @@ function App() {
     }
   }
 
-  function handleAdd() {
+  async function handleAdd() {
     if (inputValue) {
-      tableData[selectedCategory].push(inputValue);
-      setTableData((data) => ({
-        ...data,
-        [selectedCategory]: tableData[selectedCategory],
-      }));
+      const newData = { label: inputValue, value: inputValue };
+      await postDataApi(`/${selectedCategory.toLowerCase()}`, newData);
+      setDataLength((length) => length + 1);
+      setCurrentPage(
+        dataLength % ITEM_PER_PAGE === 0
+          ? Math.ceil(dataLength / ITEM_PER_PAGE) + 1
+          : Math.ceil(dataLength / ITEM_PER_PAGE)
+      );
       setInputValue("");
-      if (displayedData.length === ITEM_PER_PAGE) {
-        setCurrentPage(
-          Math.ceil(tableData[selectedCategory].length / ITEM_PER_PAGE)
-        );
-      }
     }
   }
 
-  function handleDelete(e, id) {
+  async function handleDelete(e, id) {
     e.stopPropagation();
-    setTableData((data) => ({
-      ...data,
-      [selectedCategory]: tableData[selectedCategory].filter((el) => el !== id),
-    }));
-    setSelectedItems((items) => items.filter((item) => item !== id));
+    await deleteDataApi(`/${selectedCategory.toLowerCase()}/${id}`);
+    setDataLength((length) => length - 1);
     if (displayedData.length === 1) {
-      setCurrentPage((page) => (page === 1 ? page : page - 1));
+      setCurrentPage((currentPage) => currentPage - 1);
     }
   }
 
   function handleCategoryClick(category) {
-    setSelectedCategory(category.split(" ")[1]);
+    setSelectedCategory(category);
     setCurrentPage(1);
   }
 
@@ -79,7 +84,7 @@ function App() {
             handleCategoryClick(category);
           }}
           data={category.map((ele, index) => {
-            return { key: index, value: `(${index + 1}) ${ele}` };
+            return { id: ele, value: `(${index + 1}) ${ele}` };
           })}
           type="horizontal"
         />
@@ -99,26 +104,22 @@ function App() {
 
       <div className="table-container">
         <h2>{`List - Page ${currentPage}/${Math.max(
-          Math.ceil(tableData[selectedCategory].length / ITEM_PER_PAGE),
+          Math.ceil(dataLength / ITEM_PER_PAGE),
           1
-        )} (Total - ${tableData[selectedCategory].length})`}</h2>
+        )} (Total - ${dataLength})`}</h2>
 
         <div className="table-list">
           <Selector
-            data={displayedData.map((el, index) => {
-              return { key: index, value: el };
-            })}
+            data={displayedData}
             type="vertical"
             handleClick={handleClickItem}
             selectedItem={selectedItems}
             handleDelete={handleDelete}
           />
 
-          {tableData[selectedCategory].length > ITEM_PER_PAGE && (
+          {data[selectedCategory]?.length > ITEM_PER_PAGE && (
             <Pagination
-              maxPage={Math.ceil(
-                tableData[selectedCategory].length / ITEM_PER_PAGE
-              )}
+              maxPage={Math.max(Math.ceil(dataLength / ITEM_PER_PAGE), 1)}
               setCurrentPage={setCurrentPage}
               currentPage={currentPage}
             />

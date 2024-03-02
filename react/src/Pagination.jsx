@@ -1,4 +1,5 @@
 const Pagination = ({ currentPage, setCurrentPage, maxPage }) => {
+
   function handleNextPage() {
     setCurrentPage((page) => (page === maxPage ? page : page + 1));
   }

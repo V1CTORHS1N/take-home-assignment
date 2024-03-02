@@ -1,4 +1,4 @@
-const data = {
+const localData = {
   Vegetables: ["Carrot", "Cucumber"],
   Spices: ["Salt", "Pepper", "Chilli", "Herbs", "Curry"],
   Fruits: [
@@ -14,4 +14,4 @@ const data = {
   ],
 };
 
-export default data;
+export default localData;
